@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WCAG 2.2 checklist</title>
+<style>
+:root{
+  --bg:#f3f6fb; --card:#ffffff; --ink:#14284b; --muted:#566480; --line:#d5deec;
+  --blue:#1d4fa3; --sun:#ffd23f; --sun-ink:#4a3800; --err:#b3261e; --ok:#1b7a38;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1626; --card:#16213a; --ink:#eaf0fb; --muted:#9aa9c6; --line:#2a3858;
+    --blue:#7fa8ee; --err:#ff8a80; --ok:#6fd08c;
+    color-scheme: dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg); color:var(--ink); font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; padding:20px; overflow-x:hidden; -webkit-text-size-adjust:100%}
+main{max-width:720px; margin:0 auto}
+h1{font-size:1.4rem; margin:0 0 4px; letter-spacing:-.01em}
+h2{font-size:1rem; margin:24px 0 8px; color:var(--blue)}
+.sub{margin:0 0 16px; color:var(--muted); font-size:.9rem}
+.panel{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px}
+.seg{display:flex; gap:6px; margin-bottom:10px}
+.seg button{flex:1; font:inherit; font-size:.9rem; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px 4px; cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--blue); border-color:var(--blue); color:var(--card)}
+.tools{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+input[type=search],select{font:inherit; color:var(--ink); background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:9px}
+input[type=search]{flex:1 1 160px; min-width:0}
+.chk{display:flex; align-items:center; gap:6px; font-size:.9rem}
+.chk input{width:18px; height:18px}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--blue); outline-offset:2px}
+.bar{height:8px; background:var(--line); border-radius:99px; overflow:hidden; margin:12px 0 6px; display:flex}
+.bar i{display:block; height:100%}
+.bar .p{background:var(--ok)} .bar .f{background:var(--err)} .bar .n{background:var(--muted)}
+.stat{font-size:.85rem; color:var(--muted); margin:0}
+ul{list-style:none; margin:0; padding:0}
+li.row{display:grid; grid-template-columns:minmax(0,1fr) 118px; gap:10px; align-items:center;  background:var(--card); border:1px solid var(--line); border-left:5px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px}
+li.row[data-s="pass"]{border-left-color:var(--ok)}
+li.row[data-s="fail"]{border-left-color:var(--err)}
+.t{min-width:0}
+.t a{color:var(--ink); font-weight:600; text-decoration:none}
+.t a:hover{text-decoration:underline}
+.meta{display:flex; align-items:center; gap:8px; white-space:nowrap; margin-bottom:2px}
+.n{color:var(--muted); font-variant-numeric:tabular-nums}
+.ttl{display:block}
+.badge{display:inline-block; font-size:.72rem; font-weight:700; border:1px solid var(--line); border-radius:6px; padding:0 6px; color:var(--muted)}
+.badge.new{background:var(--sun); color:var(--sun-ink); border-color:var(--sun)}
+li.row select{width:118px; align-self:center}
+.t{grid-column:1 / -1}
+.exp{justify-self:start; font:inherit; font-size:.9rem; color:var(--blue); background:none; border:0; padding:8px 0; cursor:pointer; text-decoration:underline}
+.desc{grid-column:1 / -1; border-top:1px solid var(--line); padding-top:10px; font-size:.92rem}
+.desc p{margin:0 0 8px}
+.desc .note{color:var(--muted); font-size:.8rem}
+.desc a{color:var(--blue); margin-right:14px}
+.empty{color:var(--muted); text-align:center; padding:24px 0}
+.actions{display:flex; gap:8px; margin-top:20px}
+.actions button{font:inherit; font-size:.9rem; color:var(--ink); background:var(--card); border:1px solid var(--line); border-radius:8px; padding:9px 14px; cursor:pointer}
+footer{margin:20px 0 8px; font-size:.8rem; color:var(--muted)}
+footer a{color:var(--blue)}
+</style>
+</head>
+<body>
+<main>
+  <h1>WCAG 2.2 checklist</h1>
+  <p class="sub">Mark each success criterion as pass, fail or not applicable. Progress is saved in this browser.</p>
+
+  <div class="panel">
+    <div class="seg" role="group" aria-label="Conformance level">
+      <button type="button" data-l="A">Level A</button>
+      <button type="button" data-l="AA">Up to AA</button>
+      <button type="button" data-l="AAA">Up to AAA</button>
+    </div>
+    <div class="tools">
+      <input type="search" id="q" placeholder="Search number or title" aria-label="Search criteria">
+      <select id="show" aria-label="Show criteria">
+        <option value="all">Show all</option>
+        <option value="untested">Not tested</option>
+        <option value="fail">Failed</option>
+      </select>
+      <label class="chk"><input type="checkbox" id="onlyNew"> New in 2.2</label>
+    </div>
+    <div class="bar" id="bar" aria-hidden="true"><i class="p"></i><i class="f"></i><i class="n"></i></div>
+    <p class="stat" id="stat" aria-live="polite"></p>
+  </div>
+
+  <div id="list"></div>
+
+  <div class="actions">
+    <button type="button" id="csv">Export CSV</button>
+    <button type="button" id="clear">Clear results</button>
+  </div>
+
+  <footer>
+    Criteria names and levels are from
+    <a href="https://www.w3.org/TR/WCAG22/">Web Content Accessibility Guidelines (WCAG) 2.2</a>, © W3C.
+    Each title links to its W3C “Understanding” page.
+  </footer>
+</main>
+
+<script>
+const RAW = `1.1.1|Non-text Content|A
+1.2.1|Audio-only and Video-only (Prerecorded)|A
+1.2.2|Captions (Prerecorded)|A
+1.2.3|Audio Description or Media Alternative (Prerecorded)|A
+1.2.4|Captions (Live)|AA
+1.2.5|Audio Description (Prerecorded)|AA
+1.2.6|Sign Language (Prerecorded)|AAA
+1.2.7|Extended Audio Description (Prerecorded)|AAA
+1.2.8|Media Alternative (Prerecorded)|AAA
+1.2.9|Audio-only (Live)|AAA
+1.3.1|Info and Relationships|A
+1.3.2|Meaningful Sequence|A
+1.3.3|Sensory Characteristics|A
+1.3.4|Orientation|AA
+1.3.5|Identify Input Purpose|AA
+1.3.6|Identify Purpose|AAA
+1.4.1|Use of Color|A
+1.4.2|Audio Control|A
+1.4.3|Contrast (Minimum)|AA
+1.4.4|Resize Text|AA
+1.4.5|Images of Text|AA
+1.4.6|Contrast (Enhanced)|AAA
+1.4.7|Low or No Background Audio|AAA
+1.4.8|Visual Presentation|AAA
+1.4.9|Images of Text (No Exception)|AAA
+1.4.10|Reflow|AA
+1.4.11|Non-text Contrast|AA
+1.4.12|Text Spacing|AA
+1.4.13|Content on Hover or Focus|AA
+2.1.1|Keyboard|A
+2.1.2|No Keyboard Trap|A
+2.1.3|Keyboard (No Exception)|AAA
+2.1.4|Character Key Shortcuts|A
+2.2.1|Timing Adjustable|A
+2.2.2|Pause, Stop, Hide|A
+2.2.3|No Timing|AAA
+2.2.4|Interruptions|AAA
+2.2.5|Re-authenticating|AAA
+2.2.6|Timeouts|AAA
+2.3.1|Three Flashes or Below Threshold|A
+2.3.2|Three Flashes|AAA
+2.3.3|Animation from Interactions|AAA
+2.4.1|Bypass Blocks|A
+2.4.2|Page Titled|A
+2.4.3|Focus Order|A
+2.4.4|Link Purpose (In Context)|A
+2.4.5|Multiple Ways|AA
+2.4.6|Headings and Labels|AA
+2.4.7|Focus Visible|AA
+2.4.8|Location|AAA
+2.4.9|Link Purpose (Link Only)|AAA
+2.4.10|Section Headings|AAA
+2.4.11|Focus Not Obscured (Minimum)|AA
+2.4.12|Focus Not Obscured (Enhanced)|AAA
+2.4.13|Focus Appearance|AAA
+2.5.1|Pointer Gestures|A
+2.5.2|Pointer Cancellation|A
+2.5.3|Label in Name|A
+2.5.4|Motion Actuation|A
+2.5.5|Target Size (Enhanced)|AAA
+2.5.6|Concurrent Input Mechanisms|AAA
+2.5.7|Dragging Movements|AA
+2.5.8|Target Size (Minimum)|AA
+3.1.1|Language of Page|A
+3.1.2|Language of Parts|AA
+3.1.3|Unusual Words|AAA
+3.1.4|Abbreviations|AAA
+3.1.5|Reading Level|AAA
+3.1.6|Pronunciation|AAA
+3.2.1|On Focus|A
+3.2.2|On Input|A
+3.2.3|Consistent Navigation|AA
+3.2.4|Consistent Identification|AA
+3.2.5|Change on Request|AAA
+3.2.6|Consistent Help|A
+3.3.1|Error Identification|A
+3.3.2|Labels or Instructions|A
+3.3.3|Error Suggestion|AA
+3.3.4|Error Prevention (Legal, Financial, Data)|AA
+3.3.5|Help|AAA
+3.3.6|Error Prevention (All)|AAA
+3.3.7|Redundant Entry|A
+3.3.8|Accessible Authentication (Minimum)|AA
+3.3.9|Accessible Authentication (Enhanced)|AAA
+4.1.2|Name, Role, Value|A
+4.1.3|Status Messages|AA`;
+
+const DESC = {"1.1.1": "Provide a text alternative for images and other non-text content, so it can be read aloud or shown in other forms. Purely decorative items should be ignored by assistive technology.", "1.2.1": "Provide a text alternative or transcript for audio-only and video-only content, such as a podcast.", "1.2.2": "Provide synchronized captions for speech and important sounds in prerecorded videos.", "1.2.3": "Provide an audio description or a full text alternative for the visual information in prerecorded video.", "1.2.4": "Provide captions for live audio in synchronized media, such as webinars.", "1.2.5": "Provide audio description of important visual content in prerecorded video.", "1.2.6": "Provide sign language interpretation for the audio in prerecorded videos.", "1.2.7": "Provide extended audio description, pausing the video if needed, when natural gaps are too short for normal description.", "1.2.8": "Provide a full text document describing prerecorded video, including the visuals and the sounds.", "1.2.9": "Provide a text alternative, such as live captions, for live audio-only content.", "1.3.1": "Structure and relationships that are shown visually (headings, lists, tables, form labels) must also be available in code.", "1.3.2": "When the order of content affects its meaning, the reading order in the code must follow that meaningful sequence.", "1.3.3": "Instructions must not rely only on shape, size, position or sound, such as “click the round button”.", "1.3.4": "Content must not be locked to portrait or landscape, unless one orientation is essential.", "1.3.5": "Fields that collect personal data should state their purpose in code (for example with autocomplete) so browsers can fill them in.", "1.3.6": "The purpose of interface components, icons and regions can be determined in code, so users can personalize them.", "1.4.1": "Color must not be the only way to convey information, indicate an action or identify an element.", "1.4.2": "If audio plays automatically for more than 3 seconds, users can pause or stop it, or control its volume.", "1.4.3": "Text needs a contrast ratio of at least 4.5:1 against its background (3:1 for large text).", "1.4.4": "Text can be resized up to 200% without losing content or functionality, and without assistive technology.", "1.4.5": "Use real text rather than images of text, except for logos or where a specific look is essential.", "1.4.6": "Text needs a contrast ratio of at least 7:1 against its background (4.5:1 for large text).", "1.4.7": "Prerecorded speech has little or no background noise, or users can turn the background sound off or lower it.", "1.4.8": "Blocks of text let users choose colors, limit line width, avoid justified text, set line spacing, and resize text without horizontal scrolling.", "1.4.9": "Images of text are used only for pure decoration or where essential, such as logos.", "1.4.10": "Content reflows at 320 CSS pixels wide (about 400% zoom) without two-dimensional scrolling, except for content like maps and data tables.", "1.4.11": "User interface components and meaningful graphics need at least 3:1 contrast against adjacent colors.", "1.4.12": "Content stays readable and complete when users increase line, paragraph, letter and word spacing.", "1.4.13": "Content that appears on hover or focus can be dismissed, can be hovered over, and stays visible until the user removes it.", "2.1.1": "All functionality can be operated with a keyboard, without requiring specific timing for keystrokes.", "2.1.2": "Keyboard focus can always be moved away from a component using standard keys, or users are told how.", "2.1.3": "All functionality works with a keyboard alone, with no exceptions.", "2.1.4": "Single-character keyboard shortcuts can be turned off, remapped, or only work when the component has focus.", "2.2.1": "If there is a time limit, users can turn it off, adjust it, or extend it, with some exceptions.", "2.2.2": "Moving, blinking or scrolling content that starts automatically and lasts over 5 seconds can be paused, stopped or hidden. The same applies to auto-updating content.", "2.2.3": "Timing is not an essential part of the content, except for real-time events and non-interactive media.", "2.2.4": "Users can postpone or suppress interruptions, except for emergencies.", "2.2.5": "When a session expires and the user logs in again, they can continue without losing data.", "2.2.6": "Users are warned about inactivity timeouts that could cause data loss, unless the data is kept for more than 20 hours.", "2.3.1": "Nothing flashes more than three times per second, unless the flashes are below the general and red flash thresholds.", "2.3.2": "No content flashes more than three times in any one-second period, with no exceptions.", "2.3.3": "Motion animation triggered by interaction can be disabled, unless it is essential.", "2.4.1": "Provide a way to skip blocks of content that repeat across pages, such as a “skip to main content” link.", "2.4.2": "Pages have titles that describe their topic or purpose.", "2.4.3": "When navigating sequentially, the focus order preserves meaning and operability.", "2.4.4": "The purpose of each link can be understood from its text, or from its text together with its surrounding context.", "2.4.5": "More than one way is available to find a page within a set of pages, except for steps in a process.", "2.4.6": "Headings and labels describe the topic or purpose of the content.", "2.4.7": "Any keyboard-operable interface has a visible keyboard focus indicator.", "2.4.8": "Users can find out where they are within a set of pages, for example through breadcrumbs.", "2.4.9": "The purpose of each link can be identified from the link text alone.", "2.4.10": "Section headings are used to organize content.", "2.4.11": "When an element receives keyboard focus, it is not entirely hidden by author-created content, such as sticky headers or cookie banners.", "2.4.12": "When an element receives keyboard focus, no part of it is hidden by author-created content.", "2.4.13": "The keyboard focus indicator has a minimum size and contrast, so it is clearly visible.", "2.5.1": "Functionality that uses multipoint or path-based gestures can also be operated with a single pointer without a path.", "2.5.2": "Single-pointer actions can be cancelled: they fire on release, and can be aborted or undone.", "2.5.3": "For interface components with a visible text label, the accessible name contains that text.", "2.5.4": "Functions triggered by moving the device or the user can also be done with interface controls, and motion triggering can be disabled.", "2.5.5": "Pointer targets are at least 44 by 44 CSS pixels, with some exceptions.", "2.5.6": "Content doesn’t restrict input to a single kind of device; users can switch between touch, keyboard, mouse and others.", "2.5.7": "Any function that uses dragging can also be done with a single pointer without dragging, unless dragging is essential.", "2.5.8": "Pointer targets are at least 24 by 24 CSS pixels, or have enough spacing around them, with some exceptions.", "3.1.1": "The default human language of each page can be determined in code.", "3.1.2": "The language of each passage or phrase can be determined in code, except for proper names and similar cases.", "3.1.3": "A mechanism is available to find definitions of unusual words, idioms and jargon.", "3.1.4": "A mechanism is available to find the expanded form or meaning of abbreviations.", "3.1.5": "When text requires reading ability above lower secondary education level, a simpler version or supplemental content is available.", "3.1.6": "A mechanism is available to identify the pronunciation of words where the meaning is unclear without it.", "3.2.1": "Receiving focus does not trigger an unexpected change of context.", "3.2.2": "Changing the setting of an input component does not cause an unexpected change of context, unless users are warned beforehand.", "3.2.3": "Navigation that repeats on multiple pages appears in the same relative order each time.", "3.2.4": "Components with the same functionality are identified consistently across pages.", "3.2.5": "Changes of context start only on user request, or users can turn them off.", "3.2.6": "Help mechanisms (contact details, chat, self-help options) that repeat across pages appear in the same relative place.", "3.3.1": "When an input error is detected automatically, the item in error is identified and the error is described in text.", "3.3.2": "Labels or instructions are provided when content requires user input.", "3.3.3": "If an input error is detected and a suggestion for fixing it is known, the suggestion is provided, unless that would harm security or purpose.", "3.3.4": "For legal, financial or data-changing submissions, users can reverse them, have them checked, or confirm them.", "3.3.5": "Context-sensitive help is available.", "3.3.6": "For all submissions that require user input, users can reverse them, have them checked, or confirm them before finalizing.", "3.3.7": "Information already entered by the user in the same process is filled in automatically or can be selected, instead of being asked again, with some exceptions.", "3.3.8": "Logging in does not require a cognitive function test, such as remembering a password or solving a puzzle, unless an alternative or assistance is provided.", "3.3.9": "Logging in does not require a cognitive function test at all, with fewer exceptions than the minimum level.", "4.1.2": "User interface components have names and roles that can be determined in code, and their states, properties and values can be set and announced to assistive technology.", "4.1.3": "Status messages can be determined in code through roles or properties, so assistive technology can announce them without moving focus."};
+const NEW = new Set(["2.4.11","2.4.12","2.4.13","2.5.7","2.5.8","3.2.6","3.3.7","3.3.8","3.3.9"]);
+const PRINCIPLES = { 1: "1. Perceivable", 2: "2. Operable", 3: "3. Understandable", 4: "4. Robust" };
+const ORDER = { A: 1, AA: 2, AAA: 3 };
+const LABEL = { "": "Not tested", pass: "Pass", fail: "Fail", na: "N/A" };
+const KEY = "wcag22-checklist-v1";
+
+const SC = RAW.split("\n").map(l => {
+  const [n, t, lv] = l.split("|");
+  const slug = t.toLowerCase().replace(/[^a-z0-9 -]/g, "").replace(/ /g, "-");
+  return { n, t, lv, p: +n[0], isNew: NEW.has(n), d: DESC[n],
+    url: `https://www.w3.org/WAI/WCAG22/Understanding/${slug}.html`,
+    tr: `https://www.w3.org/TR/WCAG22/#${slug}` };
+});
+
+const openSet = new Set();
+let level = "AA", onlyNew = false, show = "all", query = "";
+let status = {};
+try { status = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(status)); } catch (e) {} };
+const $ = id => document.getElementById(id);
+
+function progress() {
+  const base = SC.filter(s => ORDER[s.lv] <= ORDER[level]);
+  const c = { pass: 0, fail: 0, na: 0, none: 0 };
+  base.forEach(s => c[status[s.n] || "none"]++);
+  const tot = base.length, pct = v => (v / tot * 100) + "%";
+  const bars = $("bar").children;
+  bars[0].style.width = pct(c.pass + c.na); bars[1].style.width = pct(c.fail); bars[2].style.width = "0";
+  $("stat").textContent =
+    `${tot - c.none} of ${tot} tested: ${c.pass} pass, ${c.fail} fail, ${c.na} not applicable`;
+}
+
+function render() {
+  document.querySelectorAll(".seg button").forEach(b =>
+    b.setAttribute("aria-pressed", b.dataset.l === level ? "true" : "false"));
+  const q = query.trim().toLowerCase();
+  const items = SC.filter(s =>
+    ORDER[s.lv] <= ORDER[level] &&
+    (!onlyNew || s.isNew) &&
+    (show === "all" || (show === "untested" && !status[s.n]) || (show === "fail" && status[s.n] === "fail")) &&
+    (!q || s.n.includes(q) || s.t.toLowerCase().includes(q)));
+  let html = "", last = 0;
+  items.forEach(s => {
+    if (s.p !== last) {
+      if (last) html += "</ul>";
+      html += `<h2>${PRINCIPLES[s.p]}</h2><ul>`; last = s.p;
+    }
+    const st = status[s.n] || "", op = openSet.has(s.n);
+    const opts = Object.keys(LABEL).map(k =>
+      `<option value="${k}"${k === st ? " selected" : ""}>${LABEL[k]}</option>`).join("");
+    html += `<li class="row" data-s="${st}"><div class="t"><div class="meta"><span class="n">${s.n}</span>` +
+      `<span class="badge">${s.lv}</span>${s.isNew ? '<span class="badge new">New in 2.2</span>' : ""}</div>` +
+      `<a class="ttl" href="${s.url}" target="_blank" rel="noopener">${s.t}</a>` +
+      `</div><button type="button" class="exp" data-n="${s.n}" aria-expanded="${op}" aria-controls="d-${s.n}">${op ? "Hide details" : "Show details"}</button>` +
+      `<select data-n="${s.n}" aria-label="Status for ${s.n} ${s.t}">${opts}</select>` +
+      `<div class="desc" id="d-${s.n}"${op ? "" : " hidden"}><p>${s.d}</p>` +
+      `<p class="note">Plain-language summary, not the official wording.</p>` +
+      `<p><a href="${s.url}" target="_blank" rel="noopener">Understanding ${s.n}</a>` +
+      `<a href="${s.tr}" target="_blank" rel="noopener">Full text in WCAG 2.2</a></p></div></li>`;
+  });
+  if (last) html += "</ul>";
+  $("list").innerHTML = html || '<p class="empty">No criteria match these filters.</p>';
+  progress();
+}
+
+document.querySelectorAll(".seg button").forEach(b =>
+  b.addEventListener("click", () => { level = b.dataset.l; render(); }));
+$("q").addEventListener("input", e => { query = e.target.value; render(); });
+$("show").addEventListener("change", e => { show = e.target.value; render(); });
+$("onlyNew").addEventListener("change", e => { onlyNew = e.target.checked; render(); });
+
+$("list").addEventListener("change", e => {
+  const sel = e.target.closest("select[data-n]");
+  if (!sel) return;
+  if (sel.value) status[sel.dataset.n] = sel.value; else delete status[sel.dataset.n];
+  save();
+  sel.closest("li").dataset.s = sel.value;
+  progress();
+});
+
+$("list").addEventListener("click", e => {
+  const b = e.target.closest("button.exp");
+  if (!b) return;
+  const n = b.dataset.n, d = document.getElementById("d-" + n), open = d.hidden;
+  d.hidden = !open;
+  b.setAttribute("aria-expanded", String(open));
+  b.textContent = open ? "Hide details" : "Show details";
+  if (open) openSet.add(n); else openSet.delete(n);
+});
+
+$("csv").addEventListener("click", () => {
+  const rows = [["Criterion", "Title", "Level", "Status"]];
+  SC.forEach(s => rows.push([s.n, s.t, s.lv, LABEL[status[s.n] || ""]]));
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\ufeff" + csv], { type: "text/csv" }));
+  a.download = "wcag-22-results.csv";
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+
+$("clear").addEventListener("click", () => {
+  if (confirm("Clear all saved results?")) { status = {}; save(); render(); }
+});
+
+render();
+</script>
+</body>
+</html>
